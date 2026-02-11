@@ -18,11 +18,6 @@
         />
 </ItemGroup>
 <ItemGroup>
-    <ProjectReference
-            Include="Template/VersionGenerator/VersionGenerator.csproj"
-            ReferenceOutputAssembly="false"
-        />
-    
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
     <PackageReference
@@ -75,21 +70,11 @@
     </Reference>
     <!-- Ignore files in Template (there is a separeate project to generate version numbers from git tags -->
     <Compile Remove="Template/**/*.cs" />
+    <Compile Remove="VersionInfo.g.cs" />
+    <Compile Include="VersionInfo.g.cs" />
 </ItemGroup>
 <Target Name="GenerateVersion" BeforeTargets="BeforeBuild">
-  <Exec
-    Command="dotnet run --project Template/VersionGenerator/VersionGenerator.csproj -- VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml"
-    ConsoleToMSBuild="true"
-    StandardOutputImportance="High"
-    StandardErrorImportance="High"
-    IgnoreExitCode="true"
-  >
-    <Output TaskParameter="ExitCode" PropertyName="GenerateVersionExitCode" />
-    <Output TaskParameter="ConsoleOutput" PropertyName="GenerateVersionConsoleOutput" />
-  </Exec>
-
-  <Message Condition="'$(GenerateVersionExitCode)' != '0'" Importance="High" Text="$(GenerateVersionConsoleOutput)" />
-  <Error Condition="'$(GenerateVersionExitCode)' != '0'" Text="GenerateVersion failed with exit code $(GenerateVersionExitCode). Output: $(GenerateVersionConsoleOutput)" />
+  <Exec Command="python Template/create_version_info.py VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml" />
 </Target>
 <Target Name="PrintPaths" BeforeTargets="BeforeBuild">
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) == ''" Text="Could not find Stationeers automatically, set the path manually in Main.props"/>

@@ -4,11 +4,6 @@ description: Build and release a Stationeers mod
 runs:
   using: composite
   steps:
-    - name: Setup Mono
-      uses: actions/setup-mono@v1
-      with:
-        mono-version: "latest"
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
@@ -19,6 +14,13 @@ runs:
       with:
         fetch-depth: 0
         submodules: recursive
+        lfs: true
+
+    - name: Fetch Git LFS objects in Template
+      shell: bash
+      run: |
+        git submodule foreach git lfs pull
+        git submodule foreach git lfs checkout
 
     - name: Build project
       shell: bash
