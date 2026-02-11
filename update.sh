@@ -4,6 +4,7 @@ git checkout main
 git pull
 
 cp NuGet.Config ../
+cp Main.csproj.template ../
 cp github-deploy.yml ../.github/workflows/deploy.yml || true
 
 cd ..
