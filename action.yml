@@ -4,6 +4,11 @@ description: Build and release a Stationeers mod
 runs:
   using: composite
   steps:
+    - name: Setup Mono
+      uses: actions/setup-mono@v1
+      with:
+        mono-version: "latest"
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
