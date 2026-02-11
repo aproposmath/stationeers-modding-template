@@ -77,15 +77,19 @@
     <Compile Remove="Template/**/*.cs" />
 </ItemGroup>
 <Target Name="GenerateVersion" BeforeTargets="BeforeBuild">
-  <PropertyGroup>
-    <_VersionGeneratorNoBuild Condition="Exists('Template/VersionGenerator/bin/$(Configuration)/net48/VersionGenerator.dll')"> --no-build</_VersionGeneratorNoBuild>
-  </PropertyGroup>
   <Exec
-    Command="dotnet run$(_VersionGeneratorNoBuild) --project Template/VersionGenerator/VersionGenerator.csproj -- VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml"
+    Command="dotnet run --project Template/VersionGenerator/VersionGenerator.csproj -- VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml"
     ConsoleToMSBuild="true"
     StandardOutputImportance="High"
     StandardErrorImportance="High"
-  />
+    IgnoreExitCode="true"
+  >
+    <Output TaskParameter="ExitCode" PropertyName="GenerateVersionExitCode" />
+    <Output TaskParameter="ConsoleOutput" PropertyName="GenerateVersionConsoleOutput" />
+  </Exec>
+
+  <Message Condition="'$(GenerateVersionExitCode)' != '0'" Importance="High" Text="$(GenerateVersionConsoleOutput)" />
+  <Error Condition="'$(GenerateVersionExitCode)' != '0'" Text="GenerateVersion failed with exit code $(GenerateVersionExitCode). Output: $(GenerateVersionConsoleOutput)" />
 </Target>
 <Target Name="PrintPaths" BeforeTargets="BeforeBuild">
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) == ''" Text="Could not find Stationeers automatically, set the path manually in Main.props"/>
