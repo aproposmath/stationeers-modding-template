@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<PropertyGroup>
+  <DllSubDir>steamapps/common/Stationeers/rocketstation_Data/Managed</DllSubDir>
+  
+  <!-- Environment variable -->
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('$(STATIONEERS_DIR)/$(DllSubDir)')">$(STATIONEERS_DLL_DIR)$(DllSubDir)</StationeersDllDir>
+
+  <!-- Default Steam installation paths for Windows -->
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('C:/Program Files (x86)/Steam/$(DllSubDir)')">C:/Program Files (x86)/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('C:/Program Files/Steam/$(DllSubDir)')">C:/Program Files/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('D:/Program Files (x86)/Steam/$(DllSubDir)')">D:/Program Files (x86)/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('D:/Program Files/Steam/$(DllSubDir)')">D:/Program Files/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('C:/Steam/$(DllSubDir)')">C:/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('D:/Steam/$(DllSubDir)')">D:/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('E:/Steam/$(DllSubDir)')">E:/Steam/$(DllSubDir)</StationeersDllDir>
+
+  <!-- Check for Linux Steam paths using environment variables or known directories -->
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('$(HOME)/.steam/steam/$(DllSubDir)')">$(HOME)/.steam/steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('$(HOME)/Steam/$(DllSubDir)')">$(HOME)/Steam/$(DllSubDir)</StationeersDllDir>
+  <StationeersDllDir Condition="!Exists('$(StationeersDllDir)') And Exists('$(STEAMROOT)/$(DllSubDir)')">$(STEAMROOT)/$(DllSubDir)</StationeersDllDir>
+  
+  <!-- Override with manual path -->
+  <StationeersDllDir Condition="$(StationeersDirectory) != ''">$(StationeersDirectory)/$(DllSubDir)</StationeersDllDir>
+  
+  <!-- Set StationeersDirectory if dlls were found and it was not already set. -->
+  <StationeersDirectory Condition="$(StationeersDirectory) == '' And Exists('$(StationeersDllDir)')">$([System.IO.Path]::GetFullPath('$(StationeersDllDir)/../..'))</StationeersDirectory>
+  
+  <StationeersPluginDirectory Condition="Exists('$(StationeersDllDir)')">$([System.IO.Path]::GetFullPath('$(StationeersDllDir)/../../BepInEx/plugins'))</StationeersPluginDirectory>
+</PropertyGroup>
+</Project>
