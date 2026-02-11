@@ -77,12 +77,14 @@
     <Compile Remove="Template/**/*.cs" />
 </ItemGroup>
 <Target Name="GenerateVersion" BeforeTargets="BeforeBuild">
-  <Exec Command='dotnet run --project Template/VersionGenerator/VersionGenerator.csproj -- VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml' />
+  <PropertyGroup>
+    <_VersionGeneratorNoBuild Condition="Exists('Template/VersionGenerator/bin/$(Configuration)/net48/VersionGenerator.dll')"> --no-build</_VersionGeneratorNoBuild>
+  </PropertyGroup>
+  <Exec Command="dotnet run$(_VersionGeneratorNoBuild) --project Template/VersionGenerator/VersionGenerator.csproj -- VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml" />
 </Target>
 <Target Name="PrintPaths" BeforeTargets="BeforeBuild">
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) == ''" Text="Could not find Stationeers automatically, set the path manually in Main.props"/>
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) != ''" Text="Could not find Stationeers at '$(StationeersDirectory)', remove or fix the manual entry in Main.props"/>
-  <Warning Text="Found Stationeers at $(StationeersDirectory)"/>
 </Target>
 <Target Name="Install" DependsOnTargets="Build">
   <ItemGroup>
