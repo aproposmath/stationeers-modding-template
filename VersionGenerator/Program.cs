@@ -40,7 +40,7 @@ internal static class Program
     {
         var parts = describe.Split('-');
         var version = parts[0];
-        if(version.StartsWith("v"))
+        if (version.StartsWith("v"))
             version = version.Substring(1);
         var commitCount = parts.Length > 1 ? parts[1] : "0";
         var suffix = parts.Length > 2 ? "-dev" : "";
@@ -49,6 +49,12 @@ internal static class Program
 
     public static int Main(string[] args)
     {
+        if (args.Length != 5)
+        {
+            Console.WriteLine("Usage: VersionGenerator <output_path> <AssemblyName> <AssemblyGuid> <about_xml_path>");
+            throw new ArgumentException("Invalid number of arguments");
+        }
+
         var outPath = args[0];
         var ns = "ThisAssembly";
 
@@ -96,6 +102,29 @@ internal static class Program
         File.WriteAllText(outPath, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
         Console.WriteLine(string.Format("Wrote version info to: {0}", outPath));
+
+        var aboutPath = args[3];
+
+        if (!string.IsNullOrWhiteSpace(aboutPath) && File.Exists(aboutPath))
+        {
+            var xml = File.ReadAllText(aboutPath, Encoding.UTF8);
+
+            var doc = System.Xml.Linq.XDocument.Parse(xml, System.Xml.Linq.LoadOptions.PreserveWhitespace);
+            var root = doc.Root;
+
+            if (root != null)
+            {
+                var modIdEl = root.Element("ModId");
+                if (modIdEl != null)
+                    modIdEl.Value = args[4];
+
+                var versionEl = root.Element("Version");
+                if (versionEl != null)
+                    versionEl.Value = versionLong;
+
+                File.WriteAllText(aboutPath, doc.ToString(System.Xml.Linq.SaveOptions.DisableFormatting), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            }
+        }
         return 0;
     }
 }
