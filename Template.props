@@ -68,13 +68,11 @@
         <HintPath>$(StationeersDllDir)/RG.ImGui.dll</HintPath>
         <Private>false</Private>
     </Reference>
-    <!-- Ignore files in Template (there is a separeate project to generate version numbers from git tags -->
-    <Compile Remove="Template/**/*.cs" />
-    <Compile Remove="VersionInfo.g.cs" />
-    <Compile Include="VersionInfo.g.cs" />
+    <Compile Remove="Template/VersionInfo.g.cs" />
+    <Compile Include="Template/VersionInfo.g.cs" />
 </ItemGroup>
 <Target Name="GenerateVersion" BeforeTargets="BeforeBuild">
-  <Exec Command="python Template/create_version_info.py VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml" />
+  <Exec Command="python Template/create_version_info.py Template/VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml" />
 </Target>
 <Target Name="PrintPaths" BeforeTargets="BeforeBuild">
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) == ''" Text="Could not find Stationeers automatically, set the path manually in Main.props"/>
