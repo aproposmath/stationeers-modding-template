@@ -64,7 +64,6 @@ internal static class Program
         var vTokens = parts[0].Split('.');
         var version = parts[0];
         var versionSuffix = parts.Length > 1 ? parts[1] : "";
-        Console.WriteLine("tokens: " + string.Join(", ", vTokens));
         var versionMajor = int.Parse(vTokens[0], CultureInfo.InvariantCulture);
         var versionMinor = int.Parse(vTokens.Length > 1 ? vTokens[1] : "0", CultureInfo.InvariantCulture);
         var versionPatch = int.Parse(vTokens.Length > 2 ? vTokens[2] : "0", CultureInfo.InvariantCulture);
@@ -101,7 +100,7 @@ internal static class Program
 
         File.WriteAllText(outPath, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
-        Console.WriteLine(string.Format("Wrote version info to: {0}", outPath));
+        Console.WriteLine($"Wrote version {versionLong} to: {outPath}");
 
         var aboutPath = args[3];
 
