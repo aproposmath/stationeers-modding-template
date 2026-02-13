@@ -25,6 +25,7 @@ runs:
     - name: Build project
       shell: bash
       run: |
+        python Template/download_dependencies.py
         dotnet restore
         dotnet build --configuration Release Main.csproj
 

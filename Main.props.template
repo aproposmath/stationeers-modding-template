@@ -7,5 +7,9 @@
     <Description>Example code-only mod for Stationeers</Description>
     <!-- Optional: Set this if it's not found automatically or you want to force a specific Stationeers directory -->
     <StationeersDirectory/>
+    <Dependencies>
+      <!-- Put links to .zip files here, they will be downloaded and extracted to /Template/dependencies before build on Github actions -->
+      <!-- <Url>https://some.url/to/some/file.zip</Url> -->
+    </Dependencies>
   </PropertyGroup>
 </Project>
