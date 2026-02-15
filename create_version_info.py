@@ -106,7 +106,7 @@ def main(argv: list[str]) -> int:
         f'    public const string AssemblyName = @"{_escape_csharp_verbatim_string(argv[1])}";'
     )
     lines.append(
-        f'    public const string AssemblyGuid = @"{_escape_csharp_verbatim_string(mod_id)}";'
+        f'    public const string ModID = @"{_escape_csharp_verbatim_string(mod_id)}";'
     )
     lines.append(f'    public const string BuildTime = "{build_time}";')
     lines.append("}")
