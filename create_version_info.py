@@ -9,7 +9,7 @@ from pathlib import Path
 
 def run_git_describe() -> str:
     p = subprocess.run(
-        ["git", "describe", "--tags", "--dirty", "--always"],
+        ["git", "describe", "--tags", "--dirty", "--always", "--match", "v*"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
