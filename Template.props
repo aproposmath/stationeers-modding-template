@@ -72,7 +72,7 @@
     <Compile Include="Template/VersionInfo.g.cs" />
 </ItemGroup>
 <Target Name="GenerateVersion" BeforeTargets="BeforeBuild">
-  <Exec Command="python Template/create_version_info.py Template/VersionInfo.g.cs $(AssemblyName) $(ModID) About/About.xml $(Configuration)" />
+  <Exec Command="python Template/create_version_info.py Template/VersionInfo.g.cs $(AssemblyName) About/About.xml $(Configuration)" />
 </Target>
 <Target Name="PrintPaths" BeforeTargets="BeforeBuild">
   <Error Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll') and $(StationeersDirectory) == ''" Text="Could not find Stationeers automatically, set the path manually in Main.props"/>
