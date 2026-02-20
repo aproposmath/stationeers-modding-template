@@ -51,11 +51,12 @@ runs:
 
         # 4) Build package structure
         mkdir -p dist/$BASE_NAME
+        mkdir -p dist/release
         cp "$DLL_PATH" dist/$BASE_NAME/
         cp -r About dist/$BASE_NAME/
 
         # 5) Create zip (DLL + About folder)
-        (cd dist/$BASE_NAME && zip -r "../$ZIP_NAME" .)
+        (cd dist/$BASE_NAME && zip -r "../release/$ZIP_NAME" .)
 
         # 6) Expose zip path as output for later steps (e.g. upload to release)
         echo "zip_path=dist/$ZIP_NAME" >> "$GITHUB_OUTPUT"
@@ -67,7 +68,7 @@ runs:
       with:
         tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
-        files: ${{ steps.package_zip.outputs.zip_path }}
+        files: dist/release/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
