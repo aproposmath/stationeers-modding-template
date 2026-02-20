@@ -16,6 +16,7 @@ runs:
         fetch-depth: 0
         submodules: recursive
         lfs: true
+        clean: false
 
     - name: Fetch Git LFS objects in Template
       shell: bash
