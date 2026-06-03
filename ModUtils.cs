@@ -1,4 +1,7 @@
-internal static class Utils
+using System;
+using System.IO;
+
+internal static class ModUtils
 {
     public static bool IsLoadedByScriptEngine(Type type)
     {
