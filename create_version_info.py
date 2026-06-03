@@ -142,6 +142,8 @@ def main(argv: list[str]) -> int:
             ret = m.group(1) + version_long + m.group(3)
             if github_ref_name == "main":
                 ret += "\n  <Branch>main</Branch>"
+            if github_ref_name == "debug":
+                ret += "\n  <Branch>debug</Branch>"
             return ret
 
         xml_out, n = re.subn(pattern, _repl, about_xml, count=1, flags=re.DOTALL)
