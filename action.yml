@@ -33,17 +33,20 @@ runs:
       run: |
         python Template/download_dependencies.py
         dotnet restore
-        dotnet build --configuration Release Main.csproj
+        BUILD_TYPE=$([[ "$GITHUB_REF" == refs/heads/debug ]] && echo "Debug" || echo "Release")
+        dotnet build --configuration $BUILD_TYPE Main.csproj
 
     - name: Package DLL and About folder
-      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
+      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/debug'
       id: package_zip
       shell: bash
       run: |
         set -euo pipefail
 
+        BUILD_TYPE=$([[ "$GITHUB_REF" == refs/heads/debug ]] && echo "Debug" || echo "Release")
+
         # 1) Find the first compiled DLL
-        DLL_PATH=$(find ./bin/Release -type f -name '*.dll' | head -n 1)
+        DLL_PATH=$(find ./bin/${BUILD_TYPE} -type f -name '*.dll' | head -n 1)
         echo "Found DLL at: $DLL_PATH"
 
         # 2) Get base name (without extension) and version from tag
@@ -68,7 +71,7 @@ runs:
         echo "Created package: dist/$ZIP_NAME"
 
     - name: Create GitHub Release
-      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
+      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/debug'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ github.ref_name }}
@@ -79,4 +82,4 @@ runs:
 
     - name: Run modrepo builder action
       uses: aproposmath/modrepo-builder-action@v1
-      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
+      if: github.ref_type == 'tag' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/debug'
